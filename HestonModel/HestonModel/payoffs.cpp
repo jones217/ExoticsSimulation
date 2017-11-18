@@ -73,7 +73,7 @@ namespace Barrier
 	{
 		double tmp;
 		double ko = 1;
-		for (int i = evalPath.size() - 1; i >= 0; --i)
+		for (int i = 0; i < evalPath.size(); ++i)
 		{
 			if (evalPath[i] >= SingleBarrier::b)
 				ko = 0;

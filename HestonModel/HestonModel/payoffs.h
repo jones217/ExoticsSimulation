@@ -29,7 +29,6 @@ namespace Vanilla
 		std::string T;
 		boost::gregorian::date mat;
 	};
-
 }
 
 namespace Barrier
