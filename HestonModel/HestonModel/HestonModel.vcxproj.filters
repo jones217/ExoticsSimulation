@@ -50,5 +50,11 @@
     <ClInclude Include="payoffs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="trade.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

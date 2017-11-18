@@ -5,6 +5,9 @@
 #include <vector>
 #include <boost\date_time\gregorian\gregorian.hpp>
 #include <algorithm>
+#include "payoffs.h"
+#include "trade.h"
+#include <string>
 
 namespace MonteCarlo
 {
@@ -15,6 +18,7 @@ namespace MonteCarlo
 		cMC();
 		cMC(std::shared_ptr<T>);
 		void setModel(std::shared_ptr<T>);
+		void addTrade(std::shared_ptr<Trade::Trade>);
 		void generatePath(void);
 		void generatePaths(void);
 		void evaluatePath(void);
@@ -26,10 +30,10 @@ namespace MonteCarlo
 		std::vector<std::vector<double>> paths;
 	private:
 		unsigned numPaths=100;
-		std::vector<double > matMTM;
 		std::vector<double > evalPath;
 		std::vector<double > path;
 		std::vector<boost::gregorian::date> dates;
+		std::vector<std::shared_ptr<Trade::Trade>> trades;
 		std::shared_ptr<T> t;
 	};
 
@@ -48,6 +52,15 @@ namespace MonteCarlo
 	void cMC<T>::setModel(std::shared_ptr<T> y)
 	{
 		cMC::t = y;
+	}
+
+	template <class T>
+	void cMC<T>::addTrade(std::shared_ptr<Trade::Trade> t)
+	{
+		cMC::trades.push_back(t);
+		std::string maturity = t->maturity();
+		cMC::dates.push_back(boost::gregorian::from_undelimited_string(maturity));
+		std::sort(cMC::dates.begin(), cMC::dates.end());
 	}
 
 	template <class T>
@@ -97,15 +110,13 @@ namespace MonteCarlo
 	template <class T>
 	void cMC<T>::evaluatePath(void)
 	{
-		float tmp;
-		for (size_t i = cMC::evalPath.size() - 1; i > 0; --i)
+		std::vector<double > sumVec(cMC::evalPath.size(), 0.0);
+		for (auto const& trade : cMC::trades)
 		{
-			if (i == cMC::evalPath.size() - 1)
-				tmp = std::max(cMC::evalPath[i] - 100., 0.);
-			else
-				tmp = 0;
-			cMC::evalPath[i] = tmp;
+			std::vector<double > tmp = trade->payoff(cMC::evalPath, cMC::dates);
+			std::transform(sumVec.begin(), sumVec.end(), tmp.begin(), sumVec.begin(), std::plus<double>());
 		}
+		cMC::evalPath = sumVec;
 	}
 
 	template <class T>
@@ -119,7 +130,6 @@ namespace MonteCarlo
 			cMC::evalPath = cMC::paths[i];
 			cMC::evaluatePath();
 			cMC::evalPaths[i] = cMC::evalPath;
-			cMC::matMTM.push_back(evalPath.back());
 		}
 	}
 
@@ -127,9 +137,12 @@ namespace MonteCarlo
 	double cMC<T>::t0MTM(void)
 	{
 		double out = 0.;
-		for (size_t i = 0; i < cMC::matMTM.size(); ++i)
+		for (auto const& path : cMC::evalPaths)
 		{
-			out += cMC::matMTM[0];
+			double tmpSum = 0.;
+			for (size_t i = 0; i < path.size(); ++i)
+				tmpSum += path[i];
+			out += tmpSum;
 		}
 		return out / (float)cMC::numPaths;
 	}
