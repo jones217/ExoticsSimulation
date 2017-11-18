@@ -61,6 +61,7 @@ namespace MonteCarlo
 		std::string maturity = t->maturity();
 		cMC::dates.push_back(boost::gregorian::from_undelimited_string(maturity));
 		std::sort(cMC::dates.begin(), cMC::dates.end());
+		cMC::dates.erase(unique(cMC::dates.begin(), cMC::dates.end()), cMC::dates.end());
 	}
 
 	template <class T>
@@ -72,6 +73,7 @@ namespace MonteCarlo
 			cMC::dates.push_back(boost::gregorian::from_undelimited_string(nDates[i]));
 		}
 		std::sort(cMC::dates.begin(), cMC::dates.end());
+		cMC::dates.erase(unique(cMC::dates.begin(), cMC::dates.end()), cMC::dates.end());
 	}
 
 	template <class T>

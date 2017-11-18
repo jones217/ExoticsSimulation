@@ -28,7 +28,7 @@ namespace Vanilla
 	std::vector<double > EuropeanOption::payoff(std::vector<double > evalPath, std::vector<boost::gregorian::date> dates)
 	{
 		double tmp;
-		for (int i = evalPath.size() - 1; i > 0; --i)
+		for (int i = evalPath.size() - 1; i >= 0; --i)
 		{
 			if (dates[i] == EuropeanOption::mat)
 				tmp = std::max(evalPath[i] - EuropeanOption::k, 0.);
@@ -73,7 +73,7 @@ namespace Barrier
 	{
 		double tmp;
 		double ko = 1;
-		for (int i = evalPath.size() - 1; i > 0; --i)
+		for (int i = evalPath.size() - 1; i >= 0; --i)
 		{
 			if (evalPath[i] >= SingleBarrier::b)
 				ko = 0;

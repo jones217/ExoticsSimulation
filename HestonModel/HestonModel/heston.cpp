@@ -55,14 +55,14 @@ int main(void)
 	std::shared_ptr<MonteCarlo::cMC<HestonModels::Heston>> mc(new MonteCarlo::cMC < HestonModels::Heston >(h));
 	//std::shared_ptr<MonteCarlo::cMC<BlackScholesModels::BlackScholes>> mc(new MonteCarlo::cMC<BlackScholesModels::BlackScholes>);
 	mc->setModel(h);
-	//mc->addTrade(vOpt);
-	//mc->addTrade(sBarr);
+	mc->addTrade(vOpt);
+	mc->addTrade(sBarr);
 	mc->addTrade(oTouch);
 
 	//std::shared_ptr<MonteCarlo::cMC<BlackScholesModels::BlackScholes>> mc(new MonteCarlo::cMC < BlackScholesModels::BlackScholes >(b));
 	std::vector <std::string> dates;
 	dates.push_back("20181107");
-	dates.push_back("20181107");
+	dates.push_back("20281107");
 	mc->addDates(dates);
 	mc->setNumPaths(2000);
 
