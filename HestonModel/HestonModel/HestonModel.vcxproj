@@ -152,13 +152,17 @@
     <ClCompile Include="model_utils.cpp" />
     <ClCompile Include="monte_carlo.cpp" />
     <ClCompile Include="payoffs.cpp" />
+    <ClCompile Include="portfolio.cpp" />
+    <ClCompile Include="trade.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="asset_mapping.h" />
     <ClInclude Include="matrix_alg.h" />
     <ClInclude Include="models.h" />
     <ClInclude Include="model_utils.h" />
     <ClInclude Include="monte_carlo.h" />
     <ClInclude Include="payoffs.h" />
+    <ClInclude Include="portfolio.h" />
     <ClInclude Include="trade.h" />
   </ItemGroup>
   <ItemGroup>

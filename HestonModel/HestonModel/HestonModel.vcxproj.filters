@@ -33,6 +33,12 @@
     <ClCompile Include="payoffs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="portfolio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="trade.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="matrix_alg.h">
@@ -51,6 +57,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="trade.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="asset_mapping.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="portfolio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

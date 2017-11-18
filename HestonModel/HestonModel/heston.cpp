@@ -6,6 +6,8 @@
 #include "monte_carlo.h"
 #include "payoffs.h"
 #include "trade.h"
+#include "asset_mapping.h"
+#include "portfolio.h"
 
 
 int main(void)
@@ -27,44 +29,60 @@ int main(void)
 	b->setInitialVol(0.1);
 
 	// Set up Euro Option
-	std::shared_ptr<Vanilla::EuropeanOption> vanillaOption(new Vanilla::EuropeanOption);
+	std::shared_ptr<FX::Vanilla::EuropeanOption> vanillaOption(new FX::Vanilla::EuropeanOption);
 	vanillaOption->strike(100.);
 	vanillaOption->callPut("Call");
-	vanillaOption->maturity("20191111");
+	vanillaOption->maturity("20201111");
+	vanillaOption->ccyPair("EURUSD");
+	vanillaOption->payCcy("EUR");
 	std::shared_ptr<Trade::Trade> vOpt(new Trade::Trade());
 	vOpt->setTrade(vanillaOption);
 
 	// Set up Single Barrier
-	std::shared_ptr<Barrier::SingleBarrier> singleBarrier(new Barrier::SingleBarrier);
+	std::shared_ptr<FX::Barrier::SingleBarrier> singleBarrier(new FX::Barrier::SingleBarrier);
 	singleBarrier->strike(100.);
 	singleBarrier->callPut("Call");
 	singleBarrier->barrierLevel(122.);
 	singleBarrier->maturity("20191111");
+	singleBarrier->ccyPair("USDJPY");
+	singleBarrier->payCcy("EUR");
 	std::shared_ptr<Trade::Trade> sBarr(new Trade::Trade());
 	sBarr->setTrade(singleBarrier);
 
 	// Set up OneTouch
-	std::shared_ptr<Barrier::OneTouch> oneTouch(new Barrier::OneTouch);
+	std::shared_ptr<FX::Barrier::OneTouch> oneTouch(new FX::Barrier::OneTouch);
 	oneTouch->buySell("Buy");
 	oneTouch->barrierLevel(122.);
 	oneTouch->maturity("20191111");
+	oneTouch->ccyPair("EURUSD");
+	oneTouch->payCcy("USD");
 	std::shared_ptr<Trade::Trade> oTouch(new Trade::Trade());
 	oTouch->setTrade(oneTouch);
 
-	// Monte Carlo Engine set up with chosen model
-	std::shared_ptr<MonteCarlo::cMC<HestonModels::Heston>> mc(new MonteCarlo::cMC < HestonModels::Heston >(h));
-	//std::shared_ptr<MonteCarlo::cMC<BlackScholesModels::BlackScholes>> mc(new MonteCarlo::cMC<BlackScholesModels::BlackScholes>);
-	mc->setModel(h);
-	mc->addTrade(vOpt);
-	mc->addTrade(sBarr);
-	mc->addTrade(oTouch);
+	// Add trades to Portfolio
+	Portfolio p;
+	p.push_back(vOpt);
+	p.push_back(sBarr);
+	p.push_back(oTouch);
 
-	//std::shared_ptr<MonteCarlo::cMC<BlackScholesModels::BlackScholes>> mc(new MonteCarlo::cMC < BlackScholesModels::BlackScholes >(b));
+	PortfolioInspector pI = PortfolioInspector(p);
+	std::vector<std::string> assets = pI.assetsForPortfolio();
+
+	// Monte Carlo Engine set up with chosen model
+	//std::shared_ptr<MonteCarlo::cMC<HestonModels::Heston>> mc(new MonteCarlo::cMC < HestonModels::Heston >(h));
+	std::shared_ptr<MonteCarlo::cMC<BlackScholesModels::BlackScholes>> mc(new MonteCarlo::cMC<BlackScholesModels::BlackScholes>);
+	mc->setModel(b);
+
+	mc->addPortfolio(p);
+
 	std::vector <std::string> dates;
 	dates.push_back("20181107");
 	dates.push_back("20281107");
+
 	mc->addDates(dates);
 	mc->setNumPaths(2000);
+
+	assetSpecs a = assetMapping()[FX_EURUSD];
 
 	// Run Monte Carlo Engine - save paths to class member "paths"
 	mc->generatePaths();

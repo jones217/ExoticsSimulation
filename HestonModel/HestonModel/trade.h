@@ -8,9 +8,9 @@
 #include <boost\date_time\gregorian\gregorian.hpp>
 
 typedef boost::variant<
-	std::shared_ptr<Vanilla::EuropeanOption>,
-	std::shared_ptr<Barrier::SingleBarrier>,
-	std::shared_ptr<Barrier::OneTouch>
+	std::shared_ptr<FX::Vanilla::EuropeanOption>,
+	std::shared_ptr<FX::Barrier::SingleBarrier>,
+	std::shared_ptr<FX::Barrier::OneTouch>
 > tradeTypes;
 
 namespace Trade
@@ -44,47 +44,46 @@ namespace Trade
 		}
 	};
 
+	class GatherAssetClass
+		: public boost::static_visitor<std::string>
+	{
+	public:
+		GatherAssetClass() {};
+
+		template <typename T>
+		std::string operator()(T & trade) const
+		{
+			return trade->assetClass;
+		}
+	};
+
+	class GatherUnderlyings
+		: public boost::static_visitor<std::vector<std::string>>
+	{
+	public:
+		GatherUnderlyings() {};
+
+		template <typename T>
+		std::vector<std::string> operator()(T & trade) const
+		{
+			return trade->getUnderlyings();
+		}
+	};
+
 	class Trade
 	{
 	public:
 		Trade();
-		void setTrade(std::shared_ptr<Vanilla::EuropeanOption>);
-		void setTrade(std::shared_ptr<Barrier::SingleBarrier>);
-		void setTrade(std::shared_ptr<Barrier::OneTouch>);
+		void setTrade(std::shared_ptr<FX::Vanilla::EuropeanOption>);
+		void setTrade(std::shared_ptr<FX::Barrier::SingleBarrier>);
+		void setTrade(std::shared_ptr<FX::Barrier::OneTouch>);
 		std::vector<double > payoff(std::vector<double >, std::vector<boost::gregorian::date>);
 		std::string maturity();
+		std::string assetClass();
+		std::vector<std::string> underlyings();
 	private:
 		tradeTypes t;
 	};
-
-	Trade::Trade()
-	{
-	}
-
-	void Trade::setTrade(std::shared_ptr<Vanilla::EuropeanOption> t)
-	{
-		Trade::t = t;
-	}
-
-	void Trade::setTrade(std::shared_ptr<Barrier::SingleBarrier> t)
-	{
-		Trade::t = t;
-	}
-
-	void Trade::setTrade(std::shared_ptr<Barrier::OneTouch> t)
-	{
-		Trade::t = t;
-	}
-
-	std::vector<double > Trade::payoff(std::vector<double > p, std::vector<boost::gregorian::date> d)
-	{
-		return boost::apply_visitor(CalculatePayoff(p, d), Trade::t);
-	}
-
-	std::string Trade::maturity()
-	{
-		return boost::apply_visitor(GatherMaturity(), Trade::t);
-	}
 }
 
 #endif

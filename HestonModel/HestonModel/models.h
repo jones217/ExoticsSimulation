@@ -7,13 +7,6 @@
 #include <boost\random\mersenne_twister.hpp>
 #include <boost\random\variate_generator.hpp>
 
-enum ModelType
-{
-	Heston,
-	BlackScholes
-};
-
-
 namespace HestonModels
 {
 	class Heston : public ModelUtils::BaseModel

@@ -7,6 +7,7 @@
 #include <algorithm>
 #include "payoffs.h"
 #include "trade.h"
+#include "portfolio.h"
 #include <string>
 
 namespace MonteCarlo
@@ -18,7 +19,7 @@ namespace MonteCarlo
 		cMC();
 		cMC(std::shared_ptr<T>);
 		void setModel(std::shared_ptr<T>);
-		void addTrade(std::shared_ptr<Trade::Trade>);
+		void addPortfolio(Portfolio);
 		void generatePath(void);
 		void generatePaths(void);
 		void evaluatePath(void);
@@ -55,13 +56,16 @@ namespace MonteCarlo
 	}
 
 	template <class T>
-	void cMC<T>::addTrade(std::shared_ptr<Trade::Trade> t)
+	void cMC<T>::addPortfolio(Portfolio p)
 	{
-		cMC::trades.push_back(t);
-		std::string maturity = t->maturity();
-		cMC::dates.push_back(boost::gregorian::from_undelimited_string(maturity));
-		std::sort(cMC::dates.begin(), cMC::dates.end());
-		cMC::dates.erase(unique(cMC::dates.begin(), cMC::dates.end()), cMC::dates.end());
+		for (auto const& t : p)
+		{
+			cMC::trades.push_back(t);
+			std::string maturity = t->maturity();
+			cMC::dates.push_back(boost::gregorian::from_undelimited_string(maturity));
+			std::sort(cMC::dates.begin(), cMC::dates.end());
+			cMC::dates.erase(unique(cMC::dates.begin(), cMC::dates.end()), cMC::dates.end());
+		}
 	}
 
 	template <class T>
@@ -109,6 +113,7 @@ namespace MonteCarlo
 		}
 	}
 
+	// move below out of path generation
 	template <class T>
 	void cMC<T>::evaluatePath(void)
 	{
