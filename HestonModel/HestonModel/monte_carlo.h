@@ -24,11 +24,8 @@ namespace MonteCarlo
 		void addPortfolio(Portfolio);
 		void generatePath(void);
 		void generatePaths(void);
-		void evaluatePath(void);
-		void evaluatePaths(void);
 		void addDates(std::vector<std::string>);
 		void setNumPaths(int);
-		double t0MTM(void);
 		doubleMat evalPaths;
 		doubleMat paths;
 		std::vector<boost::gregorian::date> dates;

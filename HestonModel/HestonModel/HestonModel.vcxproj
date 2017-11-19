@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="asset_mapping.cpp" />
     <ClCompile Include="heston.cpp" />
     <ClCompile Include="matrix_alg.cpp" />
     <ClCompile Include="models.cpp" />
@@ -154,6 +155,7 @@
     <ClCompile Include="payoffs.cpp" />
     <ClCompile Include="portfolio.cpp" />
     <ClCompile Include="trade.cpp" />
+    <ClCompile Include="universe_simulator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="asset_mapping.h" />
@@ -164,6 +166,7 @@
     <ClInclude Include="payoffs.h" />
     <ClInclude Include="portfolio.h" />
     <ClInclude Include="trade.h" />
+    <ClInclude Include="universe_simulator.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

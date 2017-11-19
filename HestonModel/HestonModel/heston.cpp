@@ -82,7 +82,7 @@ int main(void)
 	mc->addDates(dates);
 	mc->setNumPaths(2000);
 
-	assetSpecs a = assetMapping()[FX_EURUSD];
+	assetSpecs a = assetModelMapping()[assetNameMapping()["EURUSD"]];
 
 	// Run Monte Carlo Engine - save paths to class member "paths"
 	mc->generatePaths();
