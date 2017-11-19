@@ -10,6 +10,8 @@
 #include "portfolio.h"
 #include <string>
 
+typedef std::vector<std::vector<double>> doubleMat;
+
 namespace MonteCarlo
 {
 	template <class  T>
@@ -27,14 +29,14 @@ namespace MonteCarlo
 		void addDates(std::vector<std::string>);
 		void setNumPaths(int);
 		double t0MTM(void);
-		std::vector<std::vector<double>> evalPaths;
-		std::vector<std::vector<double>> paths;
+		doubleMat evalPaths;
+		doubleMat paths;
+		std::vector<boost::gregorian::date> dates;
+		unsigned numPaths = 100;
+		Portfolio portfolio;
 	private:
-		unsigned numPaths=100;
 		std::vector<double > evalPath;
 		std::vector<double > path;
-		std::vector<boost::gregorian::date> dates;
-		std::vector<std::shared_ptr<Trade::Trade>> trades;
 		std::shared_ptr<T> t;
 	};
 
@@ -60,7 +62,7 @@ namespace MonteCarlo
 	{
 		for (auto const& t : p)
 		{
-			cMC::trades.push_back(t);
+			cMC::portfolio.push_back(t);
 			std::string maturity = t->maturity();
 			cMC::dates.push_back(boost::gregorian::from_undelimited_string(maturity));
 			std::sort(cMC::dates.begin(), cMC::dates.end());
@@ -113,45 +115,72 @@ namespace MonteCarlo
 		}
 	}
 
-	// move below out of path generation
-	template <class T>
-	void cMC<T>::evaluatePath(void)
+	class PathEvaluator
 	{
-		std::vector<double > sumVec(cMC::evalPath.size(), 0.0);
-		for (auto const& trade : cMC::trades)
+	public:
+		PathEvaluator();
+		template <typename T>
+		PathEvaluator(T &);
+		void evaluatePath(void);
+		void evaluatePaths(void);
+		double t0MTM(void);
+		doubleMat evalPaths;
+		doubleMat paths;
+	private:
+		std::vector<double> evalPath;
+		std::vector<boost::gregorian::date> dates;
+		Portfolio portfolio;
+		int numPaths;
+	};
+
+	PathEvaluator::PathEvaluator() 
+	{
+	}
+
+	template <typename T>
+	PathEvaluator::PathEvaluator(T & mc)
+	{
+		PathEvaluator::dates = mc->dates;
+		PathEvaluator::numPaths = mc->numPaths;
+		PathEvaluator::paths = mc->paths;
+		PathEvaluator::portfolio = mc->portfolio;
+	}
+
+	void PathEvaluator::evaluatePath(void)
+	{
+		std::vector<double > sumVec(PathEvaluator::evalPath.size(), 0.0);
+		for (auto const& trade : PathEvaluator::portfolio)
 		{
-			std::vector<double > tmp = trade->payoff(cMC::evalPath, cMC::dates);
+			std::vector<double > tmp = trade->payoff(PathEvaluator::evalPath, PathEvaluator::dates);
 			std::transform(sumVec.begin(), sumVec.end(), tmp.begin(), sumVec.begin(), std::plus<double>());
 		}
-		cMC::evalPath = sumVec;
+		PathEvaluator::evalPath = sumVec;
 	}
 
-	template <class T>
-	void cMC<T>::evaluatePaths(void)
+	void PathEvaluator::evaluatePaths(void)
 	{
-		
-		std::vector <std::vector<double> > nArr(cMC::paths.size(), std::vector<double>(cMC::paths[0].size(), 0));
-		cMC::evalPaths = nArr;
-		for (size_t i = 0; i < cMC::paths.size(); ++i) 
+
+		std::vector <std::vector<double> > nArr(PathEvaluator::paths.size(), std::vector<double>(PathEvaluator::paths[0].size(), 0));
+		PathEvaluator::evalPaths = nArr;
+		for (size_t i = 0; i < PathEvaluator::paths.size(); ++i)
 		{
-			cMC::evalPath = cMC::paths[i];
-			cMC::evaluatePath();
-			cMC::evalPaths[i] = cMC::evalPath;
+			PathEvaluator::evalPath = PathEvaluator::paths[i];
+			PathEvaluator::evaluatePath();
+			PathEvaluator::evalPaths[i] = PathEvaluator::evalPath;
 		}
 	}
 
-	template <class T>
-	double cMC<T>::t0MTM(void)
+	double PathEvaluator::t0MTM(void)
 	{
 		double out = 0.;
-		for (auto const& path : cMC::evalPaths)
+		for (auto const& path : PathEvaluator::evalPaths)
 		{
 			double tmpSum = 0.;
 			for (size_t i = 0; i < path.size(); ++i)
 				tmpSum += path[i];
 			out += tmpSum;
 		}
-		return out / (float)cMC::numPaths;
+		return out / (float)PathEvaluator::numPaths;
 	}
 }
 

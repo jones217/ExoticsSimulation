@@ -87,8 +87,10 @@ int main(void)
 	// Run Monte Carlo Engine - save paths to class member "paths"
 	mc->generatePaths();
 
+	MonteCarlo::PathEvaluator pE = MonteCarlo::PathEvaluator(mc);
+
 	// Simple evaluation of T0 of trades in portfolio
-	mc->evaluatePaths();
-	std::cout << mc->t0MTM() << std::endl;
+	pE.evaluatePaths();
+	std::cout << pE.t0MTM() << std::endl;
 	_getch();
 }
