@@ -6,6 +6,9 @@
 #include "payoffs.h"
 #include <boost\variant.hpp>
 #include <boost\date_time\gregorian\gregorian.hpp>
+#include <map>
+#include "asset_mapping.h"
+
 
 typedef boost::variant<
 	std::shared_ptr<FX::Vanilla::EuropeanOption>,
@@ -19,16 +22,17 @@ namespace Trade
 		: public boost::static_visitor<std::vector<double>>
 	{
 	public:
-		CalculatePayoff(std::vector<double > path, std::vector<boost::gregorian::date> date) : path(path), date(date) { }
+		CalculatePayoff(std::vector<doubleMat> & paths, std::vector<boost::gregorian::date> date, int index) : paths(paths), date(date), index(index) { }
 
 		template <typename T>
 		std::vector<double > operator()(T & trade) const
 		{
-			return trade->payoff(path, date);
+			return trade->payoff(paths, date, index);
 		}
 	private:
-		std::vector<double > path;
+		std::vector<doubleMat> & paths;
 		std::vector<boost::gregorian::date> date;
+		int index;
 	};
 
 	class GatherMaturity
@@ -77,7 +81,7 @@ namespace Trade
 		void setTrade(std::shared_ptr<FX::Vanilla::EuropeanOption>);
 		void setTrade(std::shared_ptr<FX::Barrier::SingleBarrier>);
 		void setTrade(std::shared_ptr<FX::Barrier::OneTouch>);
-		std::vector<double > payoff(std::vector<double >, std::vector<boost::gregorian::date>);
+		std::vector<double > payoff(std::vector<doubleMat> &, std::vector<boost::gregorian::date> , int );
 		std::string maturity();
 		std::string assetClass();
 		std::vector<std::string> underlyings();

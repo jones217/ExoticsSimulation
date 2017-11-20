@@ -4,7 +4,12 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <map>
 #include <boost\date_time\gregorian\gregorian.hpp>
+#include "asset_mapping.h"
+//#include "monte_carlo.h"
+
+typedef std::vector<std::vector<double>> doubleMat;
 
 enum CallPut
 {
@@ -45,7 +50,7 @@ namespace FX
 		{
 		public:
 			EuropeanOption();
-			std::vector<double > payoff(std::vector<double >, std::vector<boost::gregorian::date>);
+			std::vector<double > payoff(std::vector<doubleMat> &, std::vector<boost::gregorian::date>, int);
 			void strike(float);
 			void callPut(std::string);
 		private:
@@ -60,7 +65,7 @@ namespace FX
 		{
 		public:
 			SingleBarrier();
-			std::vector<double > payoff(std::vector<double >, std::vector<boost::gregorian::date>);
+			std::vector<double > payoff(std::vector<doubleMat> &, std::vector<boost::gregorian::date>, int);
 			void strike(float);
 			void barrierLevel(float);
 			void callPut(std::string);
@@ -73,7 +78,7 @@ namespace FX
 		{
 		public:
 			OneTouch();
-			std::vector<double > payoff(std::vector<double >, std::vector<boost::gregorian::date>);
+			std::vector<double > payoff(std::vector<doubleMat> &, std::vector<boost::gregorian::date>, int);
 			void barrierLevel(float);
 			void buySell(std::string);
 		private:

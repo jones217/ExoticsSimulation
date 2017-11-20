@@ -2,6 +2,23 @@
 #include <algorithm>
 #include "payoffs.h"
 #include <boost\date_time\gregorian\gregorian.hpp>
+#include "asset_mapping.h"
+#include <math.h>
+#include <map>
+
+double discountFactor(std::vector<double> &rate, std::vector<boost::gregorian::date> &dates, int time)
+{
+	double factor = 0;
+	for (size_t t = 1; t <= time; ++t)
+	{
+		float dt = (dates[t] - dates[t - 1]).days() / 365.25;
+		float r = rate[t - 1];
+		factor += dt * r;
+	}
+	return std::exp(-factor);
+}
+
+std::map<std::string, Assets> assetMap = assetNameMapping();
 
 namespace FX
 {
@@ -44,21 +61,23 @@ namespace FX
 			EuropeanOption::cp = cp;
 		};
 
-		std::vector<double > EuropeanOption::payoff(std::vector<double > evalPath, std::vector<boost::gregorian::date> dates)
+		std::vector<double > EuropeanOption::payoff(std::vector<doubleMat> & paths, std::vector<boost::gregorian::date> dates, int index)
 		{
 			double tmp;
-			for (int i = evalPath.size() - 1; i >= 0; --i)
+			Assets ccyPair = assetMap[EuropeanOption::pair];
+			Assets payCcy = assetMap[EuropeanOption::pay];
+			std::vector<double> spot = paths[ccyPair][index];
+			std::vector<double> res(spot.size());
+			for (int i = spot.size() - 1; i >= 0; --i)
 			{
 				if (dates[i] == EuropeanOption::mat)
-					tmp = std::max(evalPath[i] - EuropeanOption::k, 0.);
+					tmp = std::max(spot[i] - EuropeanOption::k, 0.) * discountFactor(paths[IR_USD][index], dates, i);
 				else
 					tmp = 0;
-				evalPath[i] = tmp;
+				res[i] = tmp;
 			}
-			return evalPath;
+			return res;
 		}
-
-
 	}
 
 	namespace Barrier
@@ -82,21 +101,24 @@ namespace FX
 			SingleBarrier::cp = cp;
 		};
 
-		std::vector<double > SingleBarrier::payoff(std::vector<double > evalPath, std::vector<boost::gregorian::date> dates)
+		std::vector<double > SingleBarrier::payoff(std::vector<doubleMat> & paths, std::vector<boost::gregorian::date>dates, int index)
 		{
 			double tmp;
-			double ko = 1;
-			for (int i = 0; i < evalPath.size(); ++i)
+			float ko = 1.;
+			Assets ccyPair = assetMap[SingleBarrier::pair];
+			std::vector<double> spot = paths[ccyPair][index];
+			std::vector<double> res(spot.size());
+			for (int i = 0; i < spot.size(); ++i)
 			{
-				if (evalPath[i] >= SingleBarrier::b)
+				if (spot[i] >= SingleBarrier::b)
 					ko = 0;
 				if (dates[i] == SingleBarrier::mat)
-					tmp = ko * (std::max(evalPath[i] - SingleBarrier::k, 0.));
+					tmp = ko * (std::max(spot[i] - SingleBarrier::k, 0.)) * discountFactor(paths[IR_USD][index], dates, i);
 				else
 					tmp = 0;
-				evalPath[i] = tmp;
+				res[i] = tmp;
 			}
-			return evalPath;
+			return res;
 		}
 
 		OneTouch::OneTouch(void)
@@ -114,22 +136,26 @@ namespace FX
 		};
 
 
-		std::vector<double > OneTouch::payoff(std::vector<double > evalPath, std::vector<boost::gregorian::date> dates)
+		std::vector<double > OneTouch::payoff(std::vector<doubleMat> & paths, std::vector<boost::gregorian::date> dates, int index)
 		{
-			double touched = 0.;
-			for (int i = evalPath.size() - 1; i >= 0; --i)
+			double tmp;
+			float touched = 0.;
+			Assets ccyPair = assetMap[OneTouch::pair];
+			std::vector<double> spot = paths[ccyPair][index];
+			std::vector<double> res(spot.size());
+			for (int i = 0; i < spot.size(); ++i)
 			{
 				if (dates[i] <= OneTouch::mat)
 				{
-					if (evalPath[i] >= OneTouch::b)
+					if (spot[i] >= OneTouch::b)
 						touched = 1.;
 				}
 				if (dates[i] == OneTouch::mat)
-					evalPath[i] = touched;
+					res[i] = touched * discountFactor(paths[IR_USD][index], dates, i);
 				else
-					evalPath[i] = 0.;
+					res[i] = 0.;
 			}
-			return evalPath;
+			return res;
 		}
 
 

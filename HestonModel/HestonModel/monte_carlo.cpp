@@ -14,8 +14,8 @@ namespace MonteCarlo
 		std::vector<double > sumVec(PathEvaluator::evalPath.size(), 0.0);
 		for (auto const& trade : PathEvaluator::portfolio)
 		{
-			std::vector<double > tmp = trade->payoff(PathEvaluator::evalPath, PathEvaluator::dates);
-			std::transform(sumVec.begin(), sumVec.end(), tmp.begin(), sumVec.begin(), std::plus<double>());
+			//std::vector<double > tmp = trade->payoff(PathEvaluator::evalPath, PathEvaluator::dates);
+			//std::transform(sumVec.begin(), sumVec.end(), tmp.begin(), sumVec.begin(), std::plus<double>());
 		}
 		PathEvaluator::evalPath = sumVec;
 	}

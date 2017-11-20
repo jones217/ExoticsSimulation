@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClCompile Include="asset_mapping.cpp" />
     <ClCompile Include="heston.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="matrix_alg.cpp" />
     <ClCompile Include="models.cpp" />
     <ClCompile Include="model_utils.cpp" />

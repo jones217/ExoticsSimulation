@@ -9,6 +9,7 @@
 #include "trade.h"
 #include "portfolio.h"
 #include <string>
+//#include "asset_mapping.h"
 
 typedef std::vector<std::vector<double>> doubleMat;
 
@@ -26,6 +27,7 @@ namespace MonteCarlo
 		void generatePaths(void);
 		void addDates(std::vector<std::string>);
 		void setNumPaths(int);
+		void setStartDate(std::string);
 		doubleMat evalPaths;
 		doubleMat paths;
 		std::vector<boost::gregorian::date> dates;
@@ -35,6 +37,7 @@ namespace MonteCarlo
 		std::vector<double > evalPath;
 		std::vector<double > path;
 		std::shared_ptr<T> t;
+		boost::gregorian::date startDate;
 	};
 
 	template <class T>
@@ -55,6 +58,12 @@ namespace MonteCarlo
 	}
 
 	template <class T>
+	void cMC<T>::setStartDate(std::string date)
+	{
+		cMC::startDate = boost::gregorian::from_undelimited_string(date);
+	}
+
+	template <class T>
 	void cMC<T>::addPortfolio(Portfolio p)
 	{
 		for (auto const& t : p)
@@ -70,7 +79,7 @@ namespace MonteCarlo
 	template <class T>
 	void cMC<T>::addDates(std::vector<std::string> nDates)
 	{
-		cMC::dates.push_back(boost::gregorian::day_clock::local_day());
+		cMC::dates.push_back(cMC::startDate);
 		for (size_t i = 0; i < nDates.size(); ++i)
 		{
 			cMC::dates.push_back(boost::gregorian::from_undelimited_string(nDates[i]));

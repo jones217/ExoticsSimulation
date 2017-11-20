@@ -19,7 +19,7 @@ enum Models {
 	BlackScholes,
 };
 
-typedef std::pair<Models, std::list<double>> assetSpecs;
+typedef std::pair<Models, std::map<std::string, double>> assetSpecs;
 
 std::map<std::string, Assets> assetNameMapping(void);
 std::map<Assets, assetSpecs> assetModelMapping(void);

@@ -26,9 +26,9 @@ namespace Trade
 		Trade::t = t;
 	}
 
-	std::vector<double > Trade::payoff(std::vector<double > p, std::vector<boost::gregorian::date> d)
+	std::vector<double > Trade::payoff(std::vector<doubleMat> & p, std::vector<boost::gregorian::date> d, int i)
 	{
-		return boost::apply_visitor(CalculatePayoff(p, d), Trade::t);
+		return boost::apply_visitor(CalculatePayoff(p, d, i), Trade::t);
 	}
 
 	std::string Trade::maturity()
