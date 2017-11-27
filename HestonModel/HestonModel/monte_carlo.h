@@ -9,7 +9,6 @@
 #include "trade.h"
 #include "portfolio.h"
 #include <string>
-//#include "asset_mapping.h"
 
 typedef std::vector<std::vector<double>> doubleMat;
 
@@ -97,23 +96,23 @@ namespace MonteCarlo
 	template <class T>
 	void cMC<T>::generatePath(void)
 	{
-		cMC::path.clear();
 		std::vector<double> vals(2);
 		vals[0] = t->getSpot();
 		vals[1] = t->getInitialVol();
-		cMC::path.push_back(vals[0]);
+		cMC::path[0] = vals[0];
 		for (size_t i = 1; i < cMC::dates.size(); ++i)
 		{
 			double dt = (double)(dates[i] - dates[i - 1]).days()/365.25;
 			std::vector<double> W = cMC::t->randomGenerator();
 			cMC::t->step(vals, W, dt);
-			cMC::path.push_back(vals[0]);
+			cMC::path[i] = vals[0];
 		}
 	}
 
 	template <class T>
 	void cMC<T>::generatePaths(void)
 	{
+		cMC::path = std::vector<double >(cMC::dates.size());
 		for (size_t i = 0; i < cMC::numPaths; ++i)
 		{
 			cMC::generatePath();

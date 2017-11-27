@@ -7,7 +7,6 @@
 #include <map>
 #include <boost\date_time\gregorian\gregorian.hpp>
 #include "asset_mapping.h"
-//#include "monte_carlo.h"
 
 typedef std::vector<std::vector<double>> doubleMat;
 

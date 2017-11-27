@@ -138,11 +138,10 @@ namespace FX
 
 		std::vector<double > OneTouch::payoff(std::vector<doubleMat> & paths, std::vector<boost::gregorian::date> dates, int index)
 		{
-			double tmp;
 			float touched = 0.;
 			Assets ccyPair = assetMap[OneTouch::pair];
 			std::vector<double> spot = paths[ccyPair][index];
-			std::vector<double> res(spot.size());
+			std::vector<double> res(spot.size(), 0.0);
 			for (int i = 0; i < spot.size(); ++i)
 			{
 				if (dates[i] <= OneTouch::mat)

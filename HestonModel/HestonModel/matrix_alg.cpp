@@ -8,11 +8,12 @@ std::vector<std::vector<double>> MatrixAlg::MatMult(std::vector<std::vector<doub
 	int m = A[0].size();
 	int p = B[0].size();
 
-	std::vector <std::vector<double> > AB(n, std::vector<double>(p, 0));
+	std::vector<double> tmp(p, 0.);
+	std::vector <std::vector<double> > AB(n, tmp);
 
-	for (int j = 0; j < p; ++j) {
-		for (int k = 0; k < m; ++k) {
-			for (int i = 0; i < n; ++i) {
+	for (size_t i = 0; i < n; ++i) {
+		for (size_t k = 0; k < m; ++k) {
+			for (size_t j = 0; j < p; ++j) {
 				AB[i][j] += A[i][k] * B[k][j];
 			}
 		}
