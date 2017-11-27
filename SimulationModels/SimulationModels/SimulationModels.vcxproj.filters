@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\FXPayoffs">
+      <UniqueIdentifier>{0deb9d0f-9a7d-4565-adb9-2089a59bba6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\FXPayoffs">
+      <UniqueIdentifier>{22ce6b43-759f-4db9-9956-a8bfc429a15c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Core">
+      <UniqueIdentifier>{f2c246ca-ad71-496b-9b2e-693f40ebf917}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{50f98368-9821-4722-b795-21e51d3b2968}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Models">
+      <UniqueIdentifier>{8a26a8a7-0c6b-4c50-b0f2-cd5755f91e6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Models">
+      <UniqueIdentifier>{554fd4ba-41a1-4597-b8dc-17a0381c555a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\MathsFunctions">
+      <UniqueIdentifier>{29868183-820b-4f17-afe1-645f88e28cb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\MathsFunctions">
+      <UniqueIdentifier>{4bb3fa41-5bd7-45c7-a801-57cf000150bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TradeWrappers">
+      <UniqueIdentifier>{c7d63976-94f0-40fc-a0ad-9717ecc606a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TradeWrappers">
+      <UniqueIdentifier>{fafa24f0-99ee-4f50-8ad2-8227f11890e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Launchers">
+      <UniqueIdentifier>{4ff43165-fcf6-4acf-829a-c3bfea43bea5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FXPayoffs\payoffs.h">
+      <Filter>Header Files\FXPayoffs</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\monte_carlo.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\universe_simulator.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\asset_mapping.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\model_utils.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\models.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="MathsFunctions\matrix_alg.h">
+      <Filter>Header Files\MathsFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="TradeWrappers\portfolio.h">
+      <Filter>Header Files\TradeWrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="TradeWrappers\trade.h">
+      <Filter>Header Files\TradeWrappers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="FXPayoffs\payoffs.cpp">
+      <Filter>Source Files\FXPayoffs</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\monte_carlo.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\universe_simulator.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Models\asset_mapping.cpp">
+      <Filter>Source Files\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Models\model_utils.cpp">
+      <Filter>Source Files\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Models\models.cpp">
+      <Filter>Source Files\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="MathsFunctions\matrix_alg.cpp">
+      <Filter>Source Files\MathsFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="TradeWrappers\portfolio.cpp">
+      <Filter>Source Files\TradeWrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="TradeWrappers\trade.cpp">
+      <Filter>Source Files\TradeWrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files\Launchers</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
