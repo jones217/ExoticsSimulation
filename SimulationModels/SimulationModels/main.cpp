@@ -69,10 +69,10 @@ int main(void)
 {
 	std::clock_t start = std::clock();
 	// Add trades to Portfolio
-	Portfolio p;
-	p.push_back(vanillaCall());
-	p.push_back(singleBarrier());
-	p.push_back(oneTouch());
+	Portfolio portfolio;
+	portfolio.push_back(vanillaCall());
+	//p.push_back(singleBarrier());
+	//p.push_back(oneTouch());
 
 	std::vector <std::string> dates;
 	dates.push_back("20171121");
@@ -81,18 +81,18 @@ int main(void)
 	dates.push_back("20180207");
 	dates.push_back("20281207");
 
-	std::shared_ptr<Simulator::UniversalSimulator> s(new Simulator::UniversalSimulator(p));
-	s->setNumPaths(2000);
-	s->setStartDate("20171120");
-	s->setExposureDates(dates);
-	s->buildAndSimulateModels();
+	std::shared_ptr<Simulator::UniversalSimulator> simulator(new Simulator::UniversalSimulator(portfolio));
+	simulator->setNumPaths(1000);
+	simulator->setStartDate("20171120");
+	simulator->setExposureDates(dates);
+	simulator->buildAndSimulateModels();
 
-	Evaluator::UniverseEvaluator i = Evaluator::UniverseEvaluator(s);
-	i.evaluate();
+	Evaluator::UniverseEvaluator evaluator = Evaluator::UniverseEvaluator(simulator);
+	evaluator.evaluate();
 
 	std::clock_t timeElapsed = (std::clock() - start);
 	unsigned msElapsed = timeElapsed / (CLOCKS_PER_SEC / 1000);
-	std::cout << "Value = " << i.T0mtm() <<std::endl;
+	std::cout << "Value = " << evaluator.T0mtm() <<std::endl;
 	std::cout << "Calculated in " << msElapsed << "ms" << std::endl;
 	_getch();
 }

@@ -42,7 +42,7 @@ extern"C"
 	}
 	float *testT(int i )
 	{
-		float * a(new float(*i));
+		float * a(new float(i));
 		return a;
 	}
 }
